@@ -1,5 +1,6 @@
 package 
 {
+	import com.demonsters.debugger.MonsterDebugger;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.GameInputEvent;
@@ -21,7 +22,8 @@ package
 		
 		public function Main():void 
 		{
-			trace(this.width);
+			MonsterDebugger.initialize(this);
+            MonsterDebugger.trace(this, "Hello World!");
 			input = new GameInput();
 			controllers = new Vector.<GameInputDevice>();
 			
@@ -30,7 +32,7 @@ package
 			display.height = 300;
 			display.backgroundColor = 0xffbbbb;
 			display.text = "Display\n";
-			trace("ready");
+			MonsterDebugger.trace(this, "ready");
 			
 			this.addChild(display);
 			
@@ -38,28 +40,28 @@ package
 		}
 		
 		private function onDeviceAdded(e:GameInputEvent):void {
-			trace(e.device.name);
-			display.appendText(e.device.name + "\n");
+			MonsterDebugger.trace(this, e.device.name);
+			MonsterDebugger.trace(this, e.device.name + "\n");
 			controllers.push(e.device);
 			device = e.device;
-			display.appendText(controllers.toString() + "\n");
+			MonsterDebugger.trace(this, controllers.toString() + "\n");
 			device.enabled = true;
-			append_log(device.numControls.toString());
+			MonsterDebugger.trace(this, device.numControls.toString());
 			
 			for (var i:int = 0; i < device.numControls; i++) {
-				append_log("set event listeners");
-				append_log(i.toString());
+				MonsterDebugger.trace(this, "set event listeners");
+				MonsterDebugger.trace(this, i.toString());
 				device.getControlAt(i).addEventListener(Event.CHANGE, onControllerChange);
 			}
 		}
 		
 		private function onDeviceRemoved(e:GameInputEvent):void {
-			display.appendText(controllers.toString() + "\n");
+			MonsterDebugger.trace(this, controllers.toString() + "\n");
 		}
 		
 		private function onControllerChange(e:Event):void {
 			var ctrl:GameInputControl = e.currentTarget as GameInputControl;
-			display.appendText(ctrl.device.name + ": " + ctrl.id + " " + ctrl.value + "\n");
+			MonsterDebugger.trace(this, ctrl.device.name + ": " + ctrl.id + " " + ctrl.value + "\n");
 			display.scrollV = display.maxScrollV;
 		}
 		
